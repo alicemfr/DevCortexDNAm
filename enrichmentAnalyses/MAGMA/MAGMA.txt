@@ -1,0 +1,85 @@
+
+
+## Run MAGMA ##
+
+
+# ASD GWAS ======================================================================================================================
+
+# Step 1: Run MAGMA gene annotation on summary statistics -----------------------------------------------------------------------
+SNPLOC='ASD_GWAS_sumStats.snploc'
+GENELOC='NCBI37.3.gene.loc'
+OUTPUT1='ASD_GWAS_annot'
+
+magma --annotate window=35,10 --snp-loc $SNPLOC --gene-loc $GENELOC --out $OUTPUT1
+
+
+# Step 2: Run MAGMA gene-wide analysis ------------------------------------------------------------------------------------------
+REFDATA='g1000_eur'
+SUMSTATS='ASD_GWAS_sumStats_pval.txt'
+NCOL='nTotal'
+MODEL='snp-wise'
+OUTPUT1+='.genes.annot'
+OUTPUT2='ASD_GWAS_gene_analysis'
+
+# ASD SNP and P-value columns called 'SNP' and 'P'
+magma --bfile $REFDATA --pval $SUMSTATS ncol=$NCOL use=SNP,P --gene-annot $OUTPUT1 --gene-model $MODEL --out $OUTPUT2
+
+
+# Step 3: Run MAGMA gene set analysis -------------------------------------------------------------------------------------------
+OUTPUT2+='.genes.raw'
+
+#GENESET='ageReg_fetalBrain_geneSet.txt' # bulk
+#GENESET='fetalNeuronal_geneSet.txt' # fans: neuronal
+GENESET='fetalNon.neuronal_geneSet.txt' # fans: non-neuronal
+
+#GENESIZE='ageReg_fetalBrain_geneSize.txt' # bulk
+#GENESIZE='fetalNeuronal_geneSize.txt' # fans: neuronal
+GENESIZE='fetalNon.neuronal_geneSize.txt' # fans: non-neuronal
+
+#OUTPUT3='ASD2019_ageReg_fetalBrain_MAGMA' # bulk
+#OUTPUT3='ASD2019_fetalNeuronal_MAGMA' # fans: neuronal
+OUTPUT3='ASD2019_fetalNon.neuronal_MAGMA' # fans: non-neuronal
+
+magma --gene-results $OUTPUT2 --set-annot $GENESET gene-col=2 set-col=1 --gene-covar $GENESIZE --model condition-hide=GeneSize direction=greater --out $OUTPUT3
+
+
+
+
+# SCZ GWAS ======================================================================================================================
+
+# Step 1: Run MAGMA gene annotation on summary statistics -----------------------------------------------------------------------
+SNPLOC='SZ_GWAS_sumStats.snploc'
+GENELOC='NCBI37.3.gene.loc'
+OUTPUT1='SZ_GWAS_annot'
+
+magma --annotate window=35,10 --snp-loc $SNPLOC --gene-loc $GENELOC --out $OUTPUT1
+
+
+# Step 2: Run MAGMA gene-wide analysis ==========================================================================================
+REFDATA='g1000_eur'
+SUMSTATS='SZ_GWAS_sumStats_pval.txt'
+NCOL='nTotal'
+MODEL='snp-wise'
+OUTPUT1+='.genes.annot'
+OUTPUT2='SZ_GWAS_gene_analysis'
+
+# SZ SNP and P-value columns called 'ID' and 'PVAL'
+magma --bfile $REFDATA --pval $SUMSTATS ncol=$NCOL use=ID,PVAL --gene-annot $OUTPUT1 --gene-model $MODEL --out $OUTPUT2
+
+
+# Step 3: Run MAGMA gene set analysis -------------------------------------------------------------------------------------------
+OUTPUT2+='.genes.raw'
+
+#GENESET='ageReg_fetalBrain_geneSet.txt' # bulk
+#GENESET='fetalNeuronal_geneSet.txt' # fans: neuronal
+GENESET='fetalNon.neuronal_geneSet.txt' # fans: non-neuronal
+
+#GENESIZE='ageReg_fetalBrain_geneSize.txt' # bulk
+#GENESIZE='fetalNeuronal_geneSize.txt' # fans: neuronal
+GENESIZE='fetalNon.neuronal_geneSize.txt' # fans: non-neuronal
+
+#OUTPUT3='SCZ_ageReg_fetalBrain_MAGMA' # bulk
+#OUTPUT3='SCZ_fetalNeuronal_MAGMA' # fans: neuronal
+OUTPUT3='SCZ_fetalNon.neuronal_MAGMA' # fans: non-neuronal
+
+magma --gene-results $OUTPUT2 --set-annot $GENESET gene-col=2 set-col=1 --gene-covar $GENESIZE --model condition-hide=GeneSize direction=greater --out $OUTPUT3
