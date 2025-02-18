@@ -139,7 +139,9 @@ gene_enr$Perc <- as.numeric(perc.chr.counts)
 gene_enr$colours <- NULL
 gene_enr$Chr <- c(1:22,'X')
 gene_enr$P.adj <- as.numeric(sigs.adj)
-gene_enr <- gene_enr[,c(which(colnames(gene_enr)=='Chr'), which(colnames(gene_enr)=='Perc'), which(colnames(gene_enr) %in% c('P','Beta')), which(colnames(gene_enr)=='P.adj'))]
+gene_enr$Total.sites <- as.numeric(total.counts$Chr.Features)
+gene_enr$Sig.sites <- as.numeric(sig.counts$Chr.Features)
+gene_enr <- gene_enr[,c(which(colnames(gene_enr)=='Chr'), which(colnames(gene_enr)=='Sig.sites'), which(colnames(gene_enr)=='Total.sites'), which(colnames(gene_enr)=='Perc'), which(colnames(gene_enr) %in% c('P','Beta')), which(colnames(gene_enr)=='P.adj'))]
 if(any(gene_enr$Perc==0)){
 	gene_enr[which(gene_enr$Perc==0),c('P','Beta','P.adj')] <- NA
 }
