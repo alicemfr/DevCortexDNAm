@@ -175,7 +175,9 @@ gene_enr <- as.data.frame(gene_enr)
 gene_enr$Feature <- rownames(gene_enr)
 gene_enr$P.adj <- as.numeric(sigs.adj)
 gene_enr$Perc <- c(as.numeric(perc.cpg.counts), as.numeric(perc.gene.counts))
-gene_enr <- gene_enr[,c(which(colnames(gene_enr)=='Feature'), which(colnames(gene_enr)=='Perc'), which(colnames(gene_enr) %in% c('P','Beta')),which(colnames(gene_enr)=='P.adj'))]
+gene_enr$Total.sites <- c(total.counts$CpG.Features, total.counts$Gene.Features)
+gene_enr$Sig.sites <- c(sig.counts$CpG.Features, sig.counts$Gene.Features)
+gene_enr <- gene_enr[,c(which(colnames(gene_enr)=='Feature'), which(colnames(gene_enr)=='Sig.sites'), which(colnames(gene_enr)=='Total.sites'), which(colnames(gene_enr)=='Perc'), which(colnames(gene_enr) %in% c('P','Beta')),which(colnames(gene_enr)=='P.adj'))]
 write.csv(gene_enr, file=paste0(resTablePath, resTableFilename, ".csv"))
 
 
