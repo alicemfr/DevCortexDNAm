@@ -27,7 +27,7 @@ betas.noXY <- betas[-which(rownames(betas) %in% XY),] #790180
 
 
 #4. Load bulk fetal Age EWAS results ============================================================================================
-res <- readRDS(resultsPath, "ageReg_fetalBrain_EX3_23pcw_annot_sig.rds")
+res <- readRDS(paste0(resultsPath, "ageReg_fetalBrain_EX3_23pcw_annot_sig.rds"))
 betas.noXY.nonsig <- betas.noXY[-which(rownames(betas.noXY) %in% rownames(res)),] # remove significantly linear probes. 739839
 
 
