@@ -13,7 +13,7 @@ glistFile <- rbind(glistFile, data.frame(Gene=unique(glistFile$Gene), GeneList=r
 
 apply_tests<-function(glist, pathway, gene_test, gene_size){
 
-	model <- glm(pathway ~ gene_test + gene_size)
+	model <- glm(pathway ~ gene_test + gene_size, family="binomial")
 	p1 <- summary(model)$coefficients['gene_test','Pr(>|t|)']
 	p2 <- summary(model)$coefficients['gene_size','Pr(>|t|)']
 	b1 <- summary(model)$coefficients[c("gene_test"),'Estimate']
