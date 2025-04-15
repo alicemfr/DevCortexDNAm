@@ -43,12 +43,14 @@ perc <- (nrow(res)/nrow(res.fetal))*100 #81.54695%
 
 # annotate EWAS results table
 epicManifest <- fread(paste0(refPath, "MethylationEPIC_v-1-0_B4.csv"), skip=7, fill=TRUE)
-epicMan<-epicManifest[match(rownames(res), epicManifest$IlmnID),c("IlmnID","CHR","MAPINFO","UCSC_RefGene_Name","UCSC_RefGene_Group")]
+epicMan<-epicManifest[match(rownames(res), epicManifest$IlmnID),c("IlmnID","CHR","MAPINFO","UCSC_RefGene_Name","UCSC_RefGene_Group","Relation_to_UCSC_CpG_Island")]
 res <- cbind(res, as.data.frame(epicMan))
 
 # extract unique mentions of genes
 uniqueAnno <- function(row){ if(is.na(row)){row=''}; if(row != ""){ return(paste(unique(unlist(strsplit(row, "\\;"))), collapse = ";")) } else { return(row) } }
 res$Gene <- unlist(lapply(res$UCSC_RefGene_Name, uniqueAnno))
+res$Gene.Feature <- unlist(lapply(res$UCSC_RefGene_Group, uniqueAnno))
+res$CpG.Feature <- unlist(lapply(res$Relation_to_UCSC_CpG_Island, uniqueAnno))
 
 
 #4. Combine pre and postnatal results ===========================================================================================
@@ -56,7 +58,7 @@ res.sig <- res                                           # postnatal results tab
 res.fetal.sub.sig <- res.fetal.sub                       # fetal results table (all of which are significant in fetal)
 identical(rownames(res.sig),rownames(res.fetal.sub.sig))
 
-res.all.sig <- cbind(Post=res.sig[,c('Beta.Age','SE.Age','P.Age', 'Beta.Sex','SE.Sex','P.Sex')], Pre=res.fetal.sub.sig[,c('Beta.Age','SE.Age','P.Age', 'Beta.Sex','SE.Sex','P.Sex')], res.sig[,c('CHR','Gene')]) #41518
+res.all.sig <- cbind(Post=res.sig[,c('Beta.Age','SE.Age','P.Age', 'Beta.Sex','SE.Sex','P.Sex')], Pre=res.fetal.sub.sig[,c('Beta.Age','SE.Age','P.Age', 'Beta.Sex','SE.Sex','P.Sex')], res.sig[,c('CHR','Gene','Gene.Feature','CpG.Feature')]) #41518
 
 
 #5. Characterise level of postnatal significance ================================================================================
@@ -147,6 +149,30 @@ ES.scatter <- function(res, plot.col1, plot.col2, xlab, ylab, main, pos.legend='
 
 pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_allProbes_colourGradPval_blue_3.pdf"), width=8, height=8)
 	ES.scatter(res=res.all.sig, plot.col1='Pre.Beta.Age', plot.col2='Post.Beta.Age', xlab='Prenatal\n% change per week', ylab='Postnatal\n% change per year', main='', xlim=c(-0.06,0.08)*100, ylim=c(-0.002,0.0025)*100)
+dev.off()
+
+
+# split by genomic feature
+res.all.sig$CpG.Feature[which(res.all.sig$CpG.Feature %in% c('N_Shore','S_Shore'))] <- 'Shore'	# change all shores to Shore
+res.all.sig$CpG.Feature[which(res.all.sig$CpG.Feature %in% c('N_Shelf','S_Shelf'))] <- 'Shelf'  # change all shelves to Shelf
+gene.features <- c("TSS1500","TSS200","5'UTR","1stExon","Body","3'UTR") 
+cpg.features <- c("Island","Shore","Shelf")
+
+plotFeatures <- function(res, features, feature.col){
+	for(f in features){
+		df.plot <- res[grep(f,res[,feature.col]),]
+		ES.scatter(res=df.plot, plot.col1='Pre.Beta.Age', plot.col2='Post.Beta.Age', xlab='Prenatal\n% change per week', ylab='Postnatal\n% change per year', main=f, xlim=c(-0.06,0.08)*100, ylim=c(-0.002,0.0025)*100)
+	}
+}
+
+# Genic features
+pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_geneFeatures.pdf"), width=8, height=8)
+plotFeatures(res.all.sig, gene.features, 'Gene.Feature')
+dev.off()
+
+# CpG island features
+pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_CpGFeatures.pdf"), width=8, height=8)
+plotFeatures(res.all.sig, cpg.features, 'CpG.Feature')
 dev.off()
 
 
