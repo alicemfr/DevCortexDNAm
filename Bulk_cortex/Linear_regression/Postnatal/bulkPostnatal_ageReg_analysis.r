@@ -158,21 +158,24 @@ res.all.sig$CpG.Feature[which(res.all.sig$CpG.Feature %in% c('N_Shelf','S_Shelf'
 gene.features <- c("TSS1500","TSS200","5'UTR","1stExon","Body","3'UTR") 
 cpg.features <- c("Island","Shore","Shelf")
 
-plotFeatures <- function(res, features, feature.col){
+plotFeatures <- function(res, features, feature.col, colBySigCol){
 	for(f in features){
+		print(f)
 		df.plot <- res[grep(f,res[,feature.col]),]
 		ES.scatter(res=df.plot, plot.col1='Pre.Beta.Age', plot.col2='Post.Beta.Age', xlab='Prenatal\n% change per week', ylab='Postnatal\n% change per year', main=f, xlim=c(-0.06,0.08)*100, ylim=c(-0.002,0.0025)*100)
+		perc <- (length(which(df.plot[,colBySigCol]==1))/nrow(df.plot))*100
+		print(perc)
 	}
 }
 
 # Genic features
 pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_geneFeatures.pdf"), width=8, height=8)
-plotFeatures(res.all.sig, gene.features, 'Gene.Feature')
+plotFeatures(res.all.sig, gene.features, 'Gene.Feature', 'bonfSig')
 dev.off()
 
 # CpG island features
 pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_CpGFeatures.pdf"), width=8, height=8)
-plotFeatures(res.all.sig, cpg.features, 'CpG.Feature')
+plotFeatures(res.all.sig, cpg.features, 'CpG.Feature', 'bonfSig')
 dev.off()
 
 
