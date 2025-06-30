@@ -59,7 +59,7 @@ library(ggplot2)
 library(cowplot)
 library(gridExtra)
 
-source(paste0(scriptsPath,"4_WGCNA_plottingFunctions.r"))
+source(paste0(scriptsPath,"4_3_WGCNA_PC1vsAge.r"))
 
 # Using module colours on plots. Make colour exceptions for some colours that won't show up well on white background.
 colourExceptions <- c('lightcyan','lightyellow','white','ivory','honeydew1','floralwhite')
