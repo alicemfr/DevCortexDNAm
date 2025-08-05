@@ -128,6 +128,11 @@ plotAges <- function(res, pheno, betas, plot.column, res.column, i, colourBy=NUL
 			loess.col.same <- loessBy==colourBy
 		}else{
 			loess.NULL <- TRUE
+			if(is.null(colourBy)){
+				loess.col.same <- TRUE
+			}else{
+				loess.col.same <- FALSE
+			}
 		}
 		
 		# if loessBy exists and is not the same as colourBy...
