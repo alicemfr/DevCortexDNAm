@@ -162,20 +162,24 @@ plotFeatures <- function(res, features, feature.col, colBySigCol){
 	for(f in features){
 		print(f)
 		df.plot <- res[grep(f,res[,feature.col]),]
-		ES.scatter(res=df.plot, plot.col1='Pre.Beta.Age', plot.col2='Post.Beta.Age', xlab='Prenatal\n% change per week', ylab='Postnatal\n% change per year', main=f, xlim=c(-0.06,0.08)*100, ylim=c(-0.002,0.0025)*100)
-		perc <- (length(which(df.plot[,colBySigCol]==1))/nrow(df.plot))*100
-		print(perc)
+		bonf.feature <- 0.05/nrow(df.plot)
+		df.plot$Feature.sig <- rep(0,nrow(df.plot)) # non-significant sites annotated to feature
+		df.plot$Feature.sig[df.plot$Post.P.Age<bonf.feature] <- 1 # bonferroni-significant sites annotated to feature
+		ES.scatter(res=df.plot, plot.col1='Pre.Beta.Age', plot.col2='Post.Beta.Age', xlab='Prenatal\n% change per week', ylab='Postnatal\n% change per year', main=f, xlim=c(-0.06,0.08)*100, ylim=c(-0.002,0.0025)*100, colBySigCol=colBySigCol)
+		sig.cons <- length(which(df.plot[,colBySigCol]==1 & abs(sign(df.plot$Post.Beta.Age)-sign(df.plot$Pre.Beta.Age))==0)) # both sig and consistent in direction
+		perc <- (sig.cons/nrow(df.plot))*100
+		print(paste("Percentage",f,"dDMPs also sig postnatally and consistent in direction =", perc))
 	}
 }
 
 # Genic features
-pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_geneFeatures.pdf"), width=8, height=8)
-plotFeatures(res.all.sig, gene.features, 'Gene.Feature', 'bonfSig')
+pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_geneFeatures_bonfWthnFeature.pdf"), width=8, height=8)
+plotFeatures(res.all.sig, gene.features, 'Gene.Feature', 'Feature.sig')
 dev.off()
 
 # CpG island features
-pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_CpGFeatures.pdf"), width=8, height=8)
-plotFeatures(res.all.sig, cpg.features, 'CpG.Feature', 'bonfSig')
+pdf(paste0(AnalysisPath, "adultDMPs_fetalDMPs_BULKlifecourse_CpGFeatures_bonfWthnFeature.pdf"), width=8, height=8)
+plotFeatures(res.all.sig, cpg.features, 'CpG.Feature', 'Feature.sig')
 dev.off()
 
 
