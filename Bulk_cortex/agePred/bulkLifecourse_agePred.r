@@ -8,11 +8,6 @@ library(ggplot2)
 library(wateRmelon)
 library(grid)
 
-PathToBetas <- "/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/Bulk/2_normalised/"
-corticalScript <- "/gpfs/mrc0/projects/Research_Project-MRC190311/DNAm/Fetal/Bulk/3_analysis/Scripts/"
-plotPath <- "/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/Bulk/3_analysis/Figures/"
-setwd("/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/Bulk/3_analysis/")
-
 #1. Load data ===================================================================================================================
 load(paste0(PathToBetas,"EPICBrainLifecourse.rdat"))
 pheno <- epic.pheno
@@ -26,8 +21,9 @@ pheno$PredAge <- agep(betas)
 write.csv(pheno,file="predAgePostnatal_Horvath.csv")
 
 #3. Run Cortical clock ==========================================================================================================
-dir <- "/gpfs/mrc0/projects/Research_Project-MRC190311/references/CortexClock/" #reference coeffs
-source(paste0(corticalScript,"corticalClock_GShireby.r"))
+dir <- "" # directory of reference coeffs
+source("CorticalClock.r")
+CorticalClock(betas, pheno, dir, IDcol='Basename', Agecol='Age') # automatically saves output to "CorticalPred.csv"
 
 #4. Correlate reported vs predicted ages ========================================================================================
 horvath <- read.csv("predAgePostnatal_Horvath.csv", row.names=1)
@@ -39,7 +35,6 @@ RepvsPred <- function(df, predCol, xlab="Reported age (years)", ylab="Predicted 
 	d <- data.frame(ReportedAge=df$ReportedAge, PredictedAge=df[,predCol])
 	cor.age <- signif(cor.test(d$ReportedAge, d$PredictedAge)$estimate, digits=3)
 	print(cor.age)
-	#grob <- grobTree(textGrob(paste("Cor =",cor.age), x=0.2,  y=0.95, gp=gpar(col="black", fontsize=20)))
 	maxVal <- max( max(d$ReportedAge), max(d$PredictedAge) ) #max plot value
 	minVal <- min( min(d$ReportedAge), min(d$PredictedAge) ) #min plot value
 	ggplot(d, aes(x=ReportedAge, y=PredictedAge))+
@@ -56,17 +51,16 @@ RepvsPred <- function(df, predCol, xlab="Reported age (years)", ylab="Predicted 
 			axis.title=element_text(size=22),
 			plot.title = element_text(size=23),
 			plot.margin = margin(0.1, 0.5, 0.1, 0.1, "cm")
-		)#+
-		#annotation_custom(grob)
+		)
 }
 
 # horvath clock
-pdf(paste0(plotPath, "bulkPostnatal_ReportedvsPredicted_HorvathClock2.pdf"), width=7, height=7)
+pdf(paste0(plotPath, "bulkPostnatal_ReportedvsPredicted_HorvathClock.pdf"), width=7, height=7)
 RepvsPred(df, predCol='Horvath')
 dev.off()
 
 # cortex clock
-pdf(paste0(plotPath, "bulkPostnatal_ReportedvsPredicted_CorticalClock2.pdf"), width=7, height=7)
+pdf(paste0(plotPath, "bulkPostnatal_ReportedvsPredicted_CorticalClock.pdf"), width=7, height=7)
 RepvsPred(df, predCol='Shireby')
 dev.off()
 
