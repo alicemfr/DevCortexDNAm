@@ -12,16 +12,34 @@ cells <- readRDS(paste0(refPath,"tissueNames_peakEnrichment.rds"))
 
 # Run either...
 
+
 # bulk fetal
 res <- readRDS("ageReg_fetalBrain_annot_allTissuePeaks.rds") 
 outFile <- "fetalBulk_peakEnrichment_logRegStats.csv"
 celltype <- ''
+
 
 # FANS fetal
 res <- readRDS("FANS_AgeCellSpecific_annot_allTissuePeaks.rds")
 celltype <- 'Non.neuronal'
 res$DMP <- res$DMP.Neuronal==FALSE & res$DMP.Non.neuronal==TRUE # change as appropriate to isolate neuronal or non-neuronal DMPs
 outFile <- paste0("FANS_",celltype,"specific","_peakEnrichment_logRegStats.csv")
+
+# bulk - nonlinear
+# annotate the nonlinear file with peaks from the linear file
+res <- read.csv(resultsFile) # nonlinear probes
+res.lin <- readRDS("ageReg_fetalBrain_annot_allTissuePeaks.rds")
+res.lin <- res.lin[rownames(res.lin) %in% rownames(res),]
+res <- res[rownames(res) %in% rownames(res.lin),]
+res.lin <- res.lin[match(rownames(res),rownames(res.lin)),]
+identical(rownames(res),rownames(res.lin))
+res <- cbind(res, res.lin[,cells])
+test <- 'turquoise' # replace with module name: turquoise, blue, brown, green, red, yellow, All
+colP <- paste(test,'P',sep='.')
+pThresh <- 9e-8 # arbitrary number between 0 and 1 to separate the 0s and the 1s
+res$DMP <- res[,colP]<pThresh
+outFile <- paste0("Enrichment_Peaks_nonlinear_",test,".csv")
+celltype <- ''
 
 
 #2. Calculate stats =============================================================================================================
@@ -95,6 +113,7 @@ dev.off()
 stats$result <- factor(stats$result, levels=c("Not significant","Over-enriched","Under-enriched"))
 stats$colours <- factor(stats$colours, levels=c("lightgrey","firebrick","steelblue3")) # to match order of result levels
 
+
 ## bulk ##
 pdf("Volcano_DMP_Peak_n54_logReg_new.pdf", width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
@@ -103,6 +122,7 @@ text(x=stats[stats$Celltype %in% c('Astrocytes','Excitatory'),'Estimate'], y=sta
 abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
+
 
 ## Neuronal ##
 pdf(paste0("Volcano_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=5, height=5)
@@ -113,11 +133,23 @@ abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
 
+
 ## non-neuronal ##
 pdf(paste0("Volcano_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
 plot(stats$Estimate, stats$logP.adj, pch=c(1,16)[stats$Sig], col=levels(stats$colours)[stats$result], ylim=c(min(stats$logP.adj, na.rm=T),(max(stats$logP.adj, na.rm=T)+5)), xlim=c(-2,4), ylab='-log10(p.adj)', xlab='Effect size', cex.lab=1.5, cex.axis=1.2, cex=c(0.5,1.2)[stats$Sig])
 text(x=stats[stats$Celltype %in% c('Astrocytes'),'Estimate'], y=stats[stats$Celltype %in% c('Astrocytes'),'logP.adj'], labels=c('Astrocytes'), pos=4, cex=0.8, col='black')
+abline(h=-log10(5e-2), lty=3)
+abline(v=0, lty=3)
+dev.off()
+
+
+## Bulk: nonlinear ##
+pdf(paste0("Volcano_Peaks_nonlinear_",test,".pdf"), width=5, height=5)
+par(mar=c(5.1, 5, 4.1, 2.1))
+# turquoise
+plot(stats$Estimate, stats$logP.adj, pch=c(1,16)[stats$Sig], col=levels(stats$colours)[stats$result], ylim=c(min(stats$logP.adj, na.rm=T),(max(stats$logP.adj, na.rm=T)+10)), xlim=c(-1.5,1), ylab='-log10(p.adj)', xlab='Effect size', cex.lab=1.5, cex.axis=1.2, cex=c(0.5,1.2)[stats$Sig])
+text(x=stats[stats$Celltype %in% c('Astrocytes','Excitatory','Granule','Inhibitory'),'Estimate'], y=stats[stats$Celltype %in% c('Astrocytes','Excitatory','Granule','Inhibitory'),'logP.adj'], labels=c('Astrocytes','Excitatory\n','Granule','\nInhibitory'), pos=4, cex=0.8, col='black')
 abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
