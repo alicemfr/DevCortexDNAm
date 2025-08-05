@@ -8,20 +8,15 @@ library(ggplot2)
 bulkRes_ASD <- read.table(paste0(bulkPath, "ASD2019_ageReg_fetalBrain_MAGMA.gsa.out"), header=T)
 bulkRes_SCZ <- read.table(paste0(bulkPath, "SCZ_ageReg_fetalBrain_MAGMA.gsa.out"), header=T)
 
-
 # FANS fetal MAGMA results
 fansRes_ASD_N <- read.table(paste0(fansPath, "ASD2019_fetalNeuronal_MAGMA.gsa.out"), header=T)
 fansRes_ASD_NN <- read.table(paste0(fansPath, "ASD2019_fetalNon.neuronal_MAGMA.gsa.out"), header=T)
 fansRes_SCZ_N <- read.table(paste0(fansPath, "SCZ_fetalNeuronal_MAGMA.gsa.out"), header=T)
 fansRes_SCZ_NN <- read.table(paste0(fansPath, "SCZ_fetalNon.neuronal_MAGMA.gsa.out"), header=T)
 
-
-# remove any results split for hypo/hypermethylated DMPs, leaving just the results for all DMPs combined
+# combine results for plotting
 ASD <- rbind(bulkRes_ASD, fansRes_ASD_N, fansRes_ASD_NN)
-ASD <- ASD[-grep('hyp',ASD$VARIABLE),]
 SCZ <- rbind(bulkRes_SCZ, fansRes_SCZ_N, fansRes_SCZ_NN)
-SCZ <- SCZ[-grep('hyp',SCZ$VARIABLE),] 
-
 
 plot_forest <- function(res, ylab){
 	p <- res$P
