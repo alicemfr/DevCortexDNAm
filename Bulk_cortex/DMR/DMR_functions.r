@@ -10,7 +10,7 @@
 library(dmrff)
 library(data.table)
 
-source("/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/Bulk/3_analysis/linearRegression/Age/DMR/miniman_Pval_ES.r") # contains miniman function
+source("DMR_miniman.r") # contains miniman function
 epicManifest <- fread(paste0(refPath, "MethylationEPIC_v-1-0_B4.csv"), skip=7, fill=TRUE)
 	
 
