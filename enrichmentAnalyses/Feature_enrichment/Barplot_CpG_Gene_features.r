@@ -94,10 +94,10 @@ total.counts <- FeatureCounts(res)                 # all array sites
 
 
 #3a. Barplot of CpG/Gene feature distribution for all probes ====================================================================
-background.sig.gene <- nrow(res.sig)-sig.counts$Gene.Features				# Genic: number of significant probes that are not part of that feature
-background.nonsig.gene <- nrow(res.nonsig)-nonsig.counts$Gene.Features		# Genic: number of non-significant probes that are not part of that feature
-background.sig.cpg <- nrow(res.sig)-sig.counts$CpG.Features					# CpG: 	 number of significant probes that are not part of that feature
-background.nonsig.cpg <- nrow(res.nonsig)-nonsig.counts$CpG.Features		# CpG: 	 number of non-significant probes that are not part of that feature
+background.sig.gene <- nrow(res.sig)-sig.counts$Gene.Features               # Genic: number of significant probes that are not part of that feature
+background.nonsig.gene <- nrow(res.nonsig)-nonsig.counts$Gene.Features      # Genic: number of non-significant probes that are not part of that feature
+background.sig.cpg <- nrow(res.sig)-sig.counts$CpG.Features                 # CpG:   number of significant probes that are not part of that feature
+background.nonsig.cpg <- nrow(res.nonsig)-nonsig.counts$CpG.Features        # CpG:   number of non-significant probes that are not part of that feature
 
 Total.probes <- nrow(res)
 perc.gene.counts <- (sig.counts$Gene.Features/total.counts$Gene.Features)*100

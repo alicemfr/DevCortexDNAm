@@ -62,14 +62,14 @@ for(cell in cells){
 	peaks <- data.frame(fread(inputFile, data.table=F),row.names=1)
 	peaks <- peaks[-which(peaks$chr %in% c('X','Y')),]
 
-	cpg_in_peak <- function(x){
+	cpg_in_peak <- function(x){  # annotate whether CpG is within peak
 		cpg <- as.numeric(x[which(colnames(res_chr)=='MAPINFO')])
 		in_peak <- any(cpg>peaks_chr$start & cpg<peaks_chr$end)
 		return(in_peak)
 	}
 
 	res_annot <- data.frame()
-	for(i in 1:22){
+	for(i in 1:22){  # loop over chr 1-22
 		print(i)
 		peaks_chr <- peaks[peaks$chr==i,]
 		res_chr <- res[res$CHR==i,]
@@ -82,7 +82,7 @@ for(cell in cells){
 	if(identical(rownames(res2),rownames(res_annot))){
 		res2[,cell] <- res_annot[,cell]
 	}else{
-		stop()
+		stop("rownames(res2)!=rownames(res_annot)")
 	}
 }
 

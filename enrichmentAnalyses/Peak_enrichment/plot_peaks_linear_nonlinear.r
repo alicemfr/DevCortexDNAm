@@ -45,7 +45,6 @@ stats <- data.frame(stats)
 stats$Cell_type <- rownames(stats)
 
 
-
 #2. Load enrichment results - linear ============================================================================================
 stats.l <- read.csv("fetalBulk_peakEnrichment_logRegStats.csv", row.names=1)
 cells <- rownames(stats.l)
@@ -84,7 +83,7 @@ p <- ggplot(m, aes(y=Cell_type, x=variable, fill=value))+
 	geom_tile(color = "white",lwd = 1.5,linetype = 1)+
 	ylab("")+
 	xlab("")+
-	scale_fill_gradient2(low="steelblue3", mid='white', high="firebrick")+#, limits=c(2,9.5))+#, limits=c(0.75,7))+
+	scale_fill_gradient2(low="steelblue3", mid='white', high="firebrick")+
 	geom_vline(xintercept=c(0.5,2.5), size=0.2, colour='black')+
 	guides(fill=guide_colourbar(title="Effect\nsize"))+
 	theme_minimal()+

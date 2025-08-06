@@ -13,19 +13,19 @@ cells <- readRDS(paste0(refPath,"tissueNames_peakEnrichment.rds"))
 # Run either...
 
 
-# bulk fetal
+# bulk fetal: linear
 res <- readRDS("ageReg_fetalBrain_annot_allTissuePeaks.rds") 
 outFile <- "fetalBulk_peakEnrichment_logRegStats.csv"
 celltype <- ''
 
 
-# FANS fetal
+# fetal neuronal & non-neuronal
 res <- readRDS("FANS_AgeCellSpecific_annot_allTissuePeaks.rds")
 celltype <- 'Non.neuronal'
 res$DMP <- res$DMP.Neuronal==FALSE & res$DMP.Non.neuronal==TRUE # change as appropriate to isolate neuronal or non-neuronal DMPs
 outFile <- paste0("FANS_",celltype,"specific","_peakEnrichment_logRegStats.csv")
 
-# bulk - nonlinear
+# bulk fetal - nonlinear
 # annotate the nonlinear file with peaks from the linear file
 res <- read.csv(resultsFile) # nonlinear probes
 res.lin <- readRDS("ageReg_fetalBrain_annot_allTissuePeaks.rds")
@@ -94,27 +94,26 @@ stats$colours <- colours
 stats <- stats[match(fts,stats$Celltype),]
 
 
-# barplot: effect size vs cell type
+# Barplot: effect size vs cell type ---------------------------------------------------------------------------------------------
 
-## bulk ##
+# bulk: linear
 pdf(paste0("Barplot_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=20,height=7)
 par(mar=c(10, 5, 3, 2.1))
 barplot(stats$Estimate, main="",ylab='Effect size', names.arg=stats$Celltype, ylim=c(-0.5,1.5), las=2, cex.lab=1.5, cex.names=1.2, cex.axis=1.2, col=stats$colours)
 dev.off()
 
-## Neuronal & non-neuronal ##
+# neuronal & non-neuronal
 pdf(paste0("Barplot_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=20,height=7)
 par(mar=c(10, 5, 3, 2.1))
 barplot(stats$Estimate, main="",ylab='Effect size', names.arg=stats$Celltype, ylim=c(-2,3),las=2, cex.lab=1.5, cex.names=1.2, cex.axis=1.2, col=stats$colours)
 dev.off()
 
 
-# volcano plot: effect size vs p-value
+# Volcano plot: effect size vs p-value ------------------------------------------------------------------------------------------
 stats$result <- factor(stats$result, levels=c("Not significant","Over-enriched","Under-enriched"))
 stats$colours <- factor(stats$colours, levels=c("lightgrey","firebrick","steelblue3")) # to match order of result levels
 
-
-## bulk ##
+# bulk: linear
 pdf("Volcano_DMP_Peak_n54_logReg_new.pdf", width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
 plot(stats$Estimate, stats$logP.adj, pch=c(1,16)[stats$Sig], col=levels(stats$colours)[stats$result], ylim=c(min(stats$logP.adj, na.rm=T),(max(stats$logP.adj, na.rm=T)+10)), xlim=c(-1,2), ylab='-log10(p.adj)', xlab='Effect size', cex.lab=1.5, cex.axis=1.2, cex=c(0.5,1.2)[stats$Sig])
@@ -123,8 +122,7 @@ abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
 
-
-## Neuronal ##
+# neuronal
 pdf(paste0("Volcano_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
 plot(stats$Estimate, stats$logP.adj, pch=c(1,16)[stats$Sig], col=levels(stats$colours)[stats$result], ylim=c(min(stats$logP.adj, na.rm=T),(max(stats$logP.adj, na.rm=T)+5)), ylab='-log10(p.adj)', xlim=c(-2,4), xlab='Effect size', cex.lab=1.5, cex.axis=1.2, cex=c(0.5,1.2)[stats$Sig])
@@ -133,8 +131,7 @@ abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
 
-
-## non-neuronal ##
+# non-neuronal
 pdf(paste0("Volcano_DMP",celltype,"specific","_Peak_n54_logReg_new.pdf"), width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
 plot(stats$Estimate, stats$logP.adj, pch=c(1,16)[stats$Sig], col=levels(stats$colours)[stats$result], ylim=c(min(stats$logP.adj, na.rm=T),(max(stats$logP.adj, na.rm=T)+5)), xlim=c(-2,4), ylab='-log10(p.adj)', xlab='Effect size', cex.lab=1.5, cex.axis=1.2, cex=c(0.5,1.2)[stats$Sig])
@@ -143,8 +140,7 @@ abline(h=-log10(5e-2), lty=3)
 abline(v=0, lty=3)
 dev.off()
 
-
-## Bulk: nonlinear ##
+# bulk: nonlinear
 pdf(paste0("Volcano_Peaks_nonlinear_",test,".pdf"), width=5, height=5)
 par(mar=c(5.1, 5, 4.1, 2.1))
 # turquoise

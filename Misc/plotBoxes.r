@@ -3,12 +3,6 @@
 ## Boxplot script for lifecourse ##
 
 plotBoxes <- function(res, pheno, betas, plot.column, res.column, p.age=NULL, i, colourBy, colours=NULL, pchBy=NULL, gene=NULL, chr=NULL, subsetTo=NULL, subsetToCol=NULL, cexAxis=1.7, cexMain=1.8, cexLab=1.5, pch=16, ablinePos=40,	ylim=c(0,105), extraDetails=TRUE, inter=FALSE, interCol=NULL, xlab='', pointColBy=NULL, boxNames=NULL, labsPos=NULL){
-	
-	#----------------------------------------------------
-	# temporarily suppress warning messages about NAs
-	defaultW <- getOption("warn") 
-	options(warn = -1) 
-	#----------------------------------------------------
 
 	par(mar=c(5.1, 5, 4.1, 2.1))
 	par(cex.axis=cexLab)
@@ -20,17 +14,17 @@ plotBoxes <- function(res, pheno, betas, plot.column, res.column, p.age=NULL, i,
 	p=signif(res[i,paste0(res.column)], digits=3)
 	
 	# create plot title
-	if(!is.null(p.age)){ 	age <- paste0('.',p.age)   }						# age group this p-value refers to
-	ttl <- probe																# title always has probe ID
-	if(!is.null(gene)){ if(gene!=''){	ttl <- paste0(ttl, ' - ',gene)   } }	# append gene name if present
-	if(!is.null(chr)){ 		ttl <- paste0(ttl, ' - CHR ',chr)   }				# append chr number
-	ttl <- paste0(ttl,	"\np", age, " = ", p)									# append p-value
+	if(!is.null(p.age)){  age <- paste0('.',p.age)  }                        # age group this p-value refers to
+	ttl <- probe                                                             # title always has probe ID
+	if(!is.null(gene)){ if(gene!=''){  ttl <- paste0(ttl, ' - ',gene)  } }   # append gene name if present
+	if(!is.null(chr)){  ttl <- paste0(ttl, ' - CHR ',chr)  }                 # append chr number
+	ttl <- paste0(ttl, "\np", age, " = ", p)                                 # append p-value
 
 	# subset data if applicable
 	if(!is.null(subsetTo)){
-	pheno <- pheno[which(pheno[,paste0(subsetToCol)] %in% subsetTo),]
-	pheno <- droplevels(pheno)
-	betas <- betas[,which(colnames(betas) %in% rownames(pheno))]
+		pheno <- pheno[which(pheno[,paste0(subsetToCol)] %in% subsetTo),]
+		pheno <- droplevels(pheno)
+		betas <- betas[,which(colnames(betas) %in% rownames(pheno))]
 	}
 
 	if(!is.null(colours)){ 	colour <- colours 	}else{	colour <- rainbow(nlevels(pheno[,paste0(plot.column)]))	}
@@ -124,8 +118,4 @@ plotBoxes <- function(res, pheno, betas, plot.column, res.column, p.age=NULL, i,
 		}
 	}
 	
-	#----------------------------------------------------
-	# turn back on warning messages
-	options(warn = defaultW)
-	#----------------------------------------------------
 }

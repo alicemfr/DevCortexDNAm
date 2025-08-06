@@ -48,7 +48,7 @@ netwk <- blockwiseModules(tbetas,
                           saveTOMs = F,
                           saveTOMFileBase = "ER",
 						  TOMType = "signed",
-                          numericLabels = T,
+						  numericLabels = T,
                           verbose = 3)
 						  
 save(netwk, file=paste0(WGCNAPath,"Blockwise_sft12_min1000_max10000_signed.Rdata"))

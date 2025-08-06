@@ -7,7 +7,9 @@
 # Outlier defined as Z-score > 5sd. Usually use cut-off of 3sd, however using a more conservative threshold of 5 to account for the 
 # dynamic nature of the data and prevent the removal of true dramatic biological trends seen at the extreme ages.
 
+
 setwd(PathToBetas)
+
 
 #1. Load data and filter samples ================================================================================================
 load(paste0(PathToBetas, "fetalBulk_EX3_23pcw_n91.rdat"))
@@ -54,6 +56,7 @@ for(i in 1:nrow(betas)){                                    # Loop over each pro
 
 
 #4. Save results ================================================================================================================
+
 # save outlier sample information
 saveRDS(allOutliers, file="fetalBrainOutlierList_newmethod_ethsnp_Feb23.rds")
 # save betas with outlier data removed

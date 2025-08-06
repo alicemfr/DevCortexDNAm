@@ -3,10 +3,11 @@
 ## Functions to calculate PCA and plot ##
 
 #1. screePlot() = calculates variance explained by principle components of pca results. Option to plot barplot.
-#2. PCAproject() = using the loadings of one set of pca results, project the loadings for other samples onto this space.
-#3. pca.Gene() = runs PCA on betas. [...] = additional arguments such as scale=TRUE to be supplied to prcomp.
-#4. plotPCA() = scatter plots of 2 PCs. Uses screePlot() to display % variance explained on axes. Optional use of PCAproject() to display projected samples on pca plot.
+#2. pca.Gene() = runs PCA on betas. [...] = additional arguments such as scale=TRUE to be supplied to prcomp.
+#3. plotPCA() = scatter plots of 2 PCs. Uses screePlot() to display % variance explained on axes. Optional use of PCAproject() to display projected samples on pca plot.
+#4. PCAproject() = using the loadings of one set of pca results, project the loadings for other samples onto this space.
 #5. pcaCorPlot() = heatmap showing significance of correlations between PCs and variables of interest.
+#6. pcaCorPlot.withCov() = heatmap showing significance of linear regression coefficients between PCs and variables of interest. Ability to control for variables.
 
 
 gg_color_hue <- function(n) {hues = seq(15, 375, length = n + 1); hcl(h = hues, l = 65, c = 100)[1:n]}
@@ -209,7 +210,7 @@ pcaCorPlot.withCov <- function(samplesheet, columns, pca.res, nPCs=10, colLabels
 	# nPCs = max number of principle components to plot out
 	# colLabels = optional: specify character string for renaming headers of heatmap if different to `columns`
 	# covariate = covariate to control for. If there is a clash and the same variable is present in `columns` and `covariate`,
-	# it will become NA in `columns` and will continue to be controlled for.
+	    # it will become NA in `columns` and will continue to be controlled for.
 	# returnP = logical whether to return p-values of correlation statistics
 	PCAres <- pca.res
 	PCs <- PCAres$x[,1:nPCs]

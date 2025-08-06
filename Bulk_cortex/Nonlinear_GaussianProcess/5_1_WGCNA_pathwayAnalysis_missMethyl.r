@@ -29,7 +29,6 @@ load(paste0(WGCNAPath,"Blockwise_sft12_min1000_max10000_signed_EX3_23_nonlinear_
 module_df <- data.frame(probe = names(netwk$colors), colors = labels2colors(netwk$colors))
 
 
-
 #4. Make dummy results table ======================================================================================================
 modules <- c('turquoise','blue','brown','yellow','green','red','All')
 

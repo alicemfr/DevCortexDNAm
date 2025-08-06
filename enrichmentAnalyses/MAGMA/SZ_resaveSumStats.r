@@ -15,8 +15,7 @@ dim(res)
 res$nTotal <- res$NCAS + res$NCON
 
 # subset to common alleles
-# Paper says "We analysed up to 7,585,078 single-nucleotide polymorphisms (SNPs) with a minor allele frequency (MAF) greater than or equal to 1% ". 
-# Since res has 7585077 rows the results must contain only common alleles.
+   # results already subset to common alleles.
 
 # subset to SNPs with high quality metric (IMPINFO)
 res <- res[which(res$IMPINFO > 0.8),] #6935162

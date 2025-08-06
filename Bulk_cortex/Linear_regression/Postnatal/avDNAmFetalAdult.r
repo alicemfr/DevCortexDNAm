@@ -11,8 +11,7 @@ library(viridis)
 
 
 avDNAm <- function(x){
-	mn <- mean(as.numeric(x))
-	return(mn)
+	return(mean(as.numeric(x)))
 }
 
 
@@ -68,10 +67,11 @@ av.adult <- pbapply(betas.adult, 1, avDNAm)
 
 #6. Combine results =============================================================================================================
 df <- data.frame(Fetal.youngest.mean=av.fetal.youngest, Fetal.oldest.mean=av.fetal.oldest, Adult.mean=av.adult)
-df <- df*100
+df <- df*100 # convert to % DNAm
 
 
 #7. Plot results ================================================================================================================
+
 # Early-fetal vs Adult
 ggplot(df, aes(x=Fetal.youngest.mean, y=Adult.mean) ) +
   geom_bin2d(bins = nrow(df)/100) +

@@ -39,10 +39,10 @@ module_df <- data.frame(probe = names(netwk$colors), colors = labels2colors(netw
 
 
 #4. Correlate a probe's DNAm against the eigengene (PC1) for its module =========================================================
-tb <- table(module_df$colors)				# Table of how many probes assigned to each module 
-tb <- tb[order(tb, decreasing=TRUE)]		# Order table highest to lowest
-modules <- names(tb)						# Extract module names
-modules <- modules[-which(modules=='grey')]	# Exclude the grey module, as this is a non-specific module
+tb <- table(module_df$colors)               # Table of how many probes assigned to each module 
+tb <- tb[order(tb, decreasing=TRUE)]        # Order table highest to lowest
+modules <- names(tb)                        # Extract module names
+modules <- modules[-which(modules=='grey')] # Exclude the grey module, as this is a non-specific module
 
 
 #5. Identify probes with greatest correlation to the module eigengene ===========================================================
@@ -92,8 +92,8 @@ modules <- names(tb)                        # Extract module names
 module_df <- hub
 						
 for(module in modules){
-print(module)
-	#i <- which(modules==m)
+	print(module)
+
 	if(module %in% colourExceptions){       # Change module's plot colour if it is an exception
 		indx <- which(colourExceptions %in% module)
 		colour <- colourAlternatives[indx]

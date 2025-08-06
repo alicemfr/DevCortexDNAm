@@ -50,13 +50,6 @@ perc.non.in.lin <- (overlap/nrow(nonsig.lin))*100 #6.577284% of nonsignificantly
 
 
 #3. Compare nonlinear and linear stats ==========================================================================================
-Beta.Age <- ggplot(df, aes(x=Group, y=Beta.Age))+ geom_jitter(aes(colour=Group))
-P.Age <- ggplot(df, aes(x=Group, y=-log10(P.Age)))+ geom_jitter(aes(colour=Group))+geom_hline(yintercept=-log10(9e-8), linetype='dotted', size=1.2)
-const_mll <- ggplot(df, aes(x=Group, y=const_mll))+ geom_jitter(aes(colour=Group))
-linear_mll <- ggplot(df, aes(x=Group, y=linear_mll))+ geom_jitter(aes(colour=Group))
-mat52_mll <- ggplot(df, aes(x=Group, y=mat52_mll))+ geom_jitter(aes(colour=Group))
-mat52_ell <- ggplot(df, aes(x=Group, y=mat52_ell))+ geom_jitter(aes(colour=Group))
-grid.arrange(Beta.Age,P.Age,const_mll,linear_mll,mat52_mll,mat52_ell, nrow=2, ncol=3)
 
 tb1 <- table(df$Group,df$PreferedModelLR)
 tb <- melt(tb1)

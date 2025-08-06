@@ -28,8 +28,8 @@ study <- 'AgeCell' #change to the EWAS study of interest
 # read in fetal and adult results and combine
 res.fetal <- c()
 res.adult <- c()
-fetal.filename <- paste0(AnalysisPath, "July24/FANS_", study, "_EWAS_Fetal.rds")
-adult.filename <- paste0(AnalysisPath, "July24/FANS_", study, "_EWAS_Adult.rds")
+fetal.filename <- paste0(AnalysisPath, "FANS_", study, "_EWAS_Fetal.rds")
+adult.filename <- paste0(AnalysisPath, "FANS_", study, "_EWAS_Adult.rds")
 
 # load file if exists
 if(file.exists(fetal.filename)){
@@ -40,7 +40,7 @@ if(file.exists(adult.filename)){
 } else{ print(paste0("File does not exist: ", adult.filename)) }
 
 df <- data.frame(Probe=rownames(res.fetal))
-f <- nrow(res.fetal); a <- nrow(res.adult) #nrow will be NULL if file does not exist
+f <- nrow(res.fetal); a <- nrow(res.adult) # nrow will be NULL if file does not exist
 
 # combine dfs
 if(!is.null(f)){ df <- cbind(df, res.fetal) }
@@ -48,7 +48,7 @@ if(!is.null(a)){ df <- cbind(df, res.adult) }
 
 res <- df
 
-# edit the column names in these cases so that they match the study name exactly
+# edit the column names so that they match the study name exactly
 if(study=='AgeCell'){ colnames(res)[grep('Age.CellType',colnames(res))] <- gsub('Age.CellType','AgeCell',colnames(res)[grep('Age.CellType',colnames(res))]) }
 
 
@@ -58,14 +58,6 @@ res <- cbind(as.data.frame(epicMan), res)
 rownames(res) <- res$IlmnID
 
 res <- res[-which(res$CHR=='Y'),]
-
-if(grepl('Sex',study)){
-	# Highlight probes found to be cross-hybridising to X/Y chr
-	cross.df <- read.csv(paste0(refPath, "BLAT_crossXY_perc90.csv"), row.names=1)
-	cross <- as.character(unique(cross.df$qName))
-	res$Potential.Cross <- rep(0,nrow(res))
-	res$Potential.Cross[which(rownames(res) %in% cross)] <- 1
-}
 
 # find unique mentions of genes
 res$Gene <- unlist(lapply(res$UCSC_RefGene_Name, uniqueAnno))

@@ -11,35 +11,35 @@
 extractNonVarProbes <- function(path.betas, path.output, name.output, nprobes=NULL){
 
 	print("Step 1 - Load betas")													
-	if(grepl(".rds",path.betas)){									# If file has .rds suffix, uses readRDS() to load
+	if(grepl(".rds",path.betas)){                                   # If file has .rds suffix, uses readRDS() to load
 		betas <- readRDS(path.betas)
-	}else{															# Else, assumes .rdat
-		e <- try(load(path.betas))									# If only 1 object was saved in .rdat format, load() does not work
-		if("try-error" %in% class(e)){								# If error when using load(), use readRDS() instead
+	}else{                                                          # Else, assumes .rdat
+		e <- try(load(path.betas))                                  # If only 1 object was saved in .rdat format, load() does not work
+		if("try-error" %in% class(e)){                              # If error when using load(), use readRDS() instead
 			print("Error when loading .rdat, probably because only 1 object present. Treating as .rds and using readRDS() instead.")
 			betas <- readRDS(path.betas)
 		}else{
 			load(path.betas)
-			betas <- get(ls()[grep('betas',ls())]) 					# Assuming betas object contains 'betas' in name
+			betas <- get(ls()[grep('betas',ls())])                  # Assuming betas object contains 'betas' in name
 		}
 	}
-	print(dim(betas))
-	if(is.null(nprobes)){											# If nprobes not specified, nprobes equals all probes in betas
+
+	if(is.null(nprobes)){                                           # If nprobes not specified, nprobes equals all probes in betas
 		nprobes <- nrow(betas)
 	}
 	
 	var.filter <- function(x){
 		probe <- betas[i,]
-		perc90 <- as.numeric(sort(probe)[0.90*length(probe)])		# 90th percentile
-		perc10 <- as.numeric(sort(probe)[0.10*length(probe)])		# 10th percentile
-		mid80 <- perc90 - perc10									# Range of middle 80% values
-			if(mid80<0.05){											# If range is < 5%, probe considered non-variable
+		perc90 <- as.numeric(sort(probe)[0.90*length(probe)])       # 90th percentile
+		perc10 <- as.numeric(sort(probe)[0.10*length(probe)])       # 10th percentile
+		mid80 <- perc90 - perc10                                    # Range of middle 80% values
+			if(mid80<0.05){                                         # If range is < 5%, probe considered non-variable
 				nonVarProbe <- rownames(betas)[i]				
-				return(c(nonVarProbe, mid80))						# Return the probe name and its middle 80% range
+				return(c(nonVarProbe, mid80))                       # Return the probe name and its middle 80% range
 			}
 	}
 	
-	print("Step 2 - Load doParallel and make clusters")				# Prepare clusters for running in parallel
+	print("Step 2 - Load doParallel and make clusters")             # Prepare clusters for running in parallel
 		library(doParallel)
 		cl <- makeCluster(10)
 		registerDoParallel(cl)
@@ -48,7 +48,7 @@ extractNonVarProbes <- function(path.betas, path.output, name.output, nprobes=NU
 		print(paste0("Starting var.filter() on ", nprobes))
 		clusterExport(cl, list("var.filter"), envir=environment())
 		res <- foreach(i=1:nprobes, .combine=rbind, .verbose=F) %dopar%{
-			var.filter(betas[i,])									# Run var.filter on each row (probe) from 1 to nprobes
+			var.filter(betas[i,])                                   # Run var.filter on each row (probe) from 1 to nprobes
 		}
 
 	print("Step 4")

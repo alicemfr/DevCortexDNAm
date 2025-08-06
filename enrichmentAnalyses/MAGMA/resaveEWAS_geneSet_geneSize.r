@@ -60,28 +60,12 @@ res.geneSize_bg <- geneSize_bg(res)
 
 
 #5. Filter for significant probes ===============================================================================================
-sigProbes <- function(res, Pcol, sigLevel=9e-8, EScol=NULL, Dir=NULL){
+sigProbes <- function(res, Pcol, sigLevel=9e-8){
 	sig <- res[which(res[,Pcol]<sigLevel),]
-	m <- sig
-	
-	if(!is.null(EScol)){
-		if(Dir=='hypo'){
-			m <- sig[which(sig[,EScol]<0),]
-		}
-		if(Dir=='hyper'){
-			m <- sig[which(sig[,EScol]>0),]
-		}
-	}
-	
-	return(m)
+	return(sig)
 }
 
 res.sig <- sigProbes(res, Pcol=Pcol)
-
-if(splitDir){
-	res.sig.hypo <- sigProbes(res, Pcol=Pcol, EScol=EScol, Dir='hypo')
-	res.sig.hyper <- sigProbes(res, Pcol=Pcol, EScol=EScol, Dir='hyper')
-}
 
 
 #6. Create Gene Set and Gene Size files =========================================================================================
@@ -114,18 +98,10 @@ sigRes.geneSize <- function(sig, geneCol='Gene', geneSetName, background){
 
 res.sig.df <- sigRes.geneSize(sig=res.sig, geneSetName=geneSetName, background=res.geneSize_bg)
 
-if(splitDir){
-	res.sig.hypo.df <- sigRes.geneSize(sig=res.sig.hypo, geneSetName=paste0(geneSetName,".hypo"), background=res.geneSize_bg)
-	res.sig.hyper.df  <- sigRes.geneSize(sig=res.sig.hyper, geneSetName=paste0(geneSetName,".hyper"), background=res.geneSize_bg)
-}
-
 
 #7. Combine results =============================================================================================================
-if(splitDir){
-	res.gene.set <- rbind(res.sig.df$GeneSet, res.sig.hypo.df$GeneSet, res.sig.hyper.df$GeneSet)
-}else{
-	res.gene.set <- res.sig.df$GeneSet
-}
+res.gene.set <- res.sig.df$GeneSet
+
 
 # add background
 geneSet_bg <- function(res.full, geneCol='Gene', geneSetName){

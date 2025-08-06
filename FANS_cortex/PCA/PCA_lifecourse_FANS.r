@@ -1,6 +1,6 @@
 
 
-## Prinipal Component Analysis (PCA) on FANS lifecourse DNAm dataset ##
+## Principal Component Analysis (PCA) on FANS lifecourse DNAm dataset ##
 
 library(ggplot2)
 library(data.table) # for fread

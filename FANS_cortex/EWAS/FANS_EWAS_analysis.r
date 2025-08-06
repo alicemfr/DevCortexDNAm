@@ -24,14 +24,14 @@ load(paste0(MethylationPath,"FANSlifecourse_N_NN.rdat"))
 
 
 #3. Load results ================================================================================================================
-study <- 'Cell' #change to the EWAS study of interest
+study <- 'Cell' # change to the EWAS study of interest, i.e. 'Cell','AgeCell','SexCell'
 if(study=='AgeCell'){
 	fl <- paste0(resPath, "FACS_", study, "_EWAS_fetal_anno")
 }else{
 	fl <- paste0(resPath, "FACS_", study, "_EWAS_fetal_adult_anno")
 }
-res <- data.frame(fread(paste0(fl,".csv"), data.table=F), row.names=1)
-res.sig <- data.frame(fread(paste0(fl,"_sig.csv"), data.table=F), row.names=1)
+res <- data.frame(fread(paste0(fl,".csv"), data.table=F), row.names=1) # full EWAS results table
+res.sig <- data.frame(fread(paste0(fl,"_sig.csv"), data.table=F), row.names=1) # only sites sig in fetal OR adult
 
 
 #4. Create Sig columns ==========================================================================================================
@@ -76,8 +76,8 @@ if(study=='AgeCellSpecific'){
 	flnm <- paste0(celltype,'.Age')
 	
 }else{	
-	studies <- c('Age','Sex','Cell','AgeCell','AgeSex','SexCell')
-	study_titles <- c('Age','Sex','CellType','Age*CellType','Age*Sex','Sex*CellType')
+	studies <- c('Cell','AgeCell')
+	study_titles <- c('CellType','Age*CellType')
 	sdy <- study_titles[which(studies==study)]
 	ttl <- paste0(sdy, " EWAS")
 	flnm <- study
@@ -139,14 +139,14 @@ dev.off()
 if(study=='AgeCellSpecific'){
 	
 	age.group <- 'Fetal'
-	Xlim <- c(-0.08,0.08)*100 #fetal: -0.08,0.08, adult: -0.005,0.005
+	Xlim <- c(-0.08,0.08)*100 # fetal: -0.08,0.08, adult: -0.005,0.005
 	Ylim <- c(-0.08,0.08)*100
 	
-	eitherSig <- res[-which(res[,paste0(age.group,'.Sig')]=='Not significant'),] #2420
+	eitherSig <- res[-which(res[,paste0(age.group,'.Sig')]=='Not significant'),]
 	
 	# all DMPs
-	df <- data.frame(Neuronal=eitherSig[,paste0(age.group,'.Neuronal.ES.Age')]*100, Non.neuronal=eitherSig[,paste0(age.group,'.Non.neuronal.ES.Age')]*100, Significance=eitherSig[,paste0(age.group,'.Sig')]) #2420
-	Cor <- cor(df$Neuronal, df$Non.neuronal) #0.5642321
+	df <- data.frame(Neuronal=eitherSig[,paste0(age.group,'.Neuronal.ES.Age')]*100, Non.neuronal=eitherSig[,paste0(age.group,'.Non.neuronal.ES.Age')]*100, Significance=eitherSig[,paste0(age.group,'.Sig')])
+	Cor <- cor(df$Neuronal, df$Non.neuronal)
 	
 	pdf(paste0(plotPath,"EffectSize_", study, "_NvsNN_", age.group, "_anySig_colourSig.pdf"), width=8, height=8)
 	ESscatter_AgeCellSpecific(df, age.group, Xlim, Ylim)
@@ -155,7 +155,7 @@ if(study=='AgeCellSpecific'){
 	# cell-type specific DMPs
 	celltype <- 'Non-neuronal'
 	df2 <- df[df$Significance %in% c(celltype,'Both'),]
-	Cor <- cor(df2$Neuronal, df2$Non.neuronal) #Neuronal=0.634, Non-neuronal=0.873
+	Cor <- cor(df2$Neuronal, df2$Non.neuronal) # Neuronal=0.634, Non-neuronal=0.873
 	
 	pdf(paste0(plotPath,"EffectSize_", study, "_NvsNN_", age.group, "_", celltype, "Sig_colourSig.pdf"), width=8, height=8)
 	ESscatter_AgeCellSpecific(df2, age.group, Xlim, Ylim)
@@ -179,9 +179,9 @@ SampleSheet$age.rescale[which(SampleSheet$Phenotype=='Adult')] <- adult.ages.sca
 #restore scientific notation for plotting p-value in titles
 options(scipen=0)
 
-source("/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/plotAges.r") # scatter plot across life-course with loess fit line
-source("/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/plotBoxes.r") # boxplot of any phenotypic factor
-source("/lustre/projects/Research_Project-MRC190311/DNAm/Lifecourse1/fetal_plotFunctions.r") # fetal plotting functions
+source("plotAges.r")              # scatter plot across life-course with loess fit line
+source("plotBoxes.r")             # boxplot of any phenotypic factor
+source("fetal_plotFunctions.r")   # fetal plotting functions
 
 
 # Fetal vs Adult ----------------------------------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ res.sig <- res[res[,sigCol]==TRUE,]
 res.ord <- orderRes(res.sig, Pcol)
 
 #3. DMPs for one age.group only
-res.sig.spec <- res.ord[which(res.ord$Sig==age.group),] # only probes where the age.group specified is significant, not both
+res.sig.spec <- res.ord[which(res.ord$Sig==age.group),] # only sites where the age.group specified is significant, not both
 
 #4. DMPs with opposite ES in fetal vs adult
 both.sig <- res[which(res$Sig=='Both'),]
@@ -337,7 +337,6 @@ dev.off()
 colourBy <- 'NewCellType'
 pchBy <- NULL
 pch <- 16
-colours <- c(viridis(4)[3],plasma(4)[2]) # needs to be reverse of above
 loessBy <- 'NewCellType'
 p.age <- 'fetal'
 res.plot <- opp.plot

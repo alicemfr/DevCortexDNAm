@@ -2,7 +2,6 @@
 
 ## Plot bulk fetal Age DMRs ##
 
-# requires R v4.2.1
 
 #--------------------------------------------------------------------------------------------------------------------------------
 # To fix bug with cache associated with AnnotationHub:

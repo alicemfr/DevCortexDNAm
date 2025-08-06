@@ -85,15 +85,15 @@ plotAges <- function(res, pheno, betas, plot.column, res.column, i, colourBy=NUL
 
 	par(mar=c(5.1, 5, 4.1, 2.1))
 	
-	probe <- rownames(res)[i]													# probe to plot
-	p <- signif(res[i,paste0(res.column)], digits=3)							# extract p-value from results
+	probe <- rownames(res)[i]                                                   # probe to plot
+	p <- signif(res[i,paste0(res.column)], digits=3)                            # extract p-value from results
 
 	# create plot title
-	if(!is.null(p.age)){ 	age <- paste0('.',p.age)   }						# age group this p-value refers to
-	ttl <- probe																# title always has probe ID
-	if(!is.null(gene)){ if(gene!=''){	ttl <- paste0(ttl, ' - ',gene)   } }	# append gene name if present
-	if(!is.null(chr)){ 		ttl <- paste0(ttl, ' - CHR ',chr)   }				# append chr number
-	ttl <- paste0(ttl,	"\np", age, " = ", p)									# append p-value
+	if(!is.null(p.age)){ 	age <- paste0('.',p.age)   }                        # age group this p-value refers to
+	ttl <- probe                                                                # title always has probe ID
+	if(!is.null(gene)){ if(gene!=''){	ttl <- paste0(ttl, ' - ',gene)   } }    # append gene name if present
+	if(!is.null(chr)){ 		ttl <- paste0(ttl, ' - CHR ',chr)   }               # append chr number
+	ttl <- paste0(ttl,	"\np", age, " = ", p)                                   # append p-value
 
 	# subset data if applicable
 	if(!is.null(subsetTo)){
@@ -103,15 +103,15 @@ plotAges <- function(res, pheno, betas, plot.column, res.column, i, colourBy=NUL
 	}
 	
 	# establish x-axis limits
-	Xlim <- c(min(pheno[,paste0(plot.column)]), (max(pheno[,paste0(plot.column)])))	# min to max value of plot.column
-	if(extendXlim){	Xlim[2] <- Xlim[2]+20 }											# extend the x-axis so legend doesn't block figure
+	Xlim <- c(min(pheno[,paste0(plot.column)]), (max(pheno[,paste0(plot.column)]))) # min to max value of plot.column
+	if(extendXlim){	Xlim[2] <- Xlim[2]+20 }                                         # extend the x-axis so legend doesn't block figure
 	
 	# data point effects
 	if(is.null(colourBy)){								
-		pheno$dummy <- rep(1, nrow(pheno))	# if not colouring points, create dummy variable column so code below still works
+		pheno$dummy <- rep(1, nrow(pheno)) # if not colouring points, create dummy variable column so code below still works
 		colourBy <- 'dummy'
 	}
-	if(!is.null(colours)){ 	colour <- colours 	}else{	colour <- rainbow(nlevels(factor(pheno[,paste0(colourBy)])))	}	# rainbow() unless manual colours specified
+	if(!is.null(colours)){ 	colour <- colours 	}else{	colour <- rainbow(nlevels(factor(pheno[,paste0(colourBy)])))	} # rainbow() unless manual colours specified
 	if(!is.null(pchBy)){ Pch=pch[factor(pheno[,paste0(pchBy)])]}else{ Pch=pch }
 	
 	#1. Plot --------------------------------------------------------------------------------------------------------------------
@@ -137,18 +137,18 @@ plotAges <- function(res, pheno, betas, plot.column, res.column, i, colourBy=NUL
 		
 		# if loessBy exists and is not the same as colourBy...
 		if(!loess.NULL & !loess.col.same){
-			for(l in 1:nlevels(factor(pheno[,paste0(loessBy)]))){					# for each level of the loessBy factor...
+			for(l in 1:nlevels(factor(pheno[,paste0(loessBy)]))){                   # for each level of the loessBy factor...
 				group.loess <- levels(factor(pheno[,paste0(loessBy)]))[l]
 
 				samples.col.loess <- which(pheno[,paste0(loessBy)]==group.loess)
-				pheno.loess <- pheno[samples.col.loess,]							# ...extract the samples...
-				betas.loess <- betas[,samples.col.loess]							# ...and corresponding DNAm.
+				pheno.loess <- pheno[samples.col.loess,]                            # ...extract the samples...
+				betas.loess <- betas[,samples.col.loess]                            # ...and corresponding DNAm.
 			
 				plotLoess(pheno=pheno.loess, betas=betas.loess, probe=probe, colourBy=colourBy, loessSpan=loessSpan, plot.column=plot.column, colour=colour, nLoessPoints=nLoessPoints, Lty=loessByLty[l], lwd=lwd)
 				
 			}
 		}else{ # either loessBy is NULL OR loessBy and colourBy are identical
-			# run DNAm for all samples together and plot one line
+            # run DNAm for all samples together and plot one line
 			
 			plotLoess(pheno=pheno, betas=betas, probe=probe, colourBy=colourBy, loessSpan=loessSpan, plot.column=plot.column, colour=colour, nLoessPoints=nLoessPoints, Lty=1, lwd=lwd)
 		

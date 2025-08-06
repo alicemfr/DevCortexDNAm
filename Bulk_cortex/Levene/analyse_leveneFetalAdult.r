@@ -10,8 +10,7 @@ library(ggplot2)
 
 
 #1. Load data ===================================================================================================================
-load(paste0(MethylationPath,"EPICBrainLifecourse.rdat"))
-
+load(paste0(MethylationPath,"EPICBrainLifecourse.rdat")) # epic.betas epic.pheno
 betas <- epic.betas
 pheno <- epic.pheno
 

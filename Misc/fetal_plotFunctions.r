@@ -4,18 +4,18 @@ library(ggplot2)
 age_scatter <- function(res, pheno, betas, i, age.column){
 
 	# extract info
-	probe <- rownames(res)[i]													# the i_th probe in res
-	betas.plot <- (betas[probe,])*100											# corresponding DNAm values for probe. Multiplied by 100 for %
-	age <- pheno[,age.column] 														# age column of sample sheet
-	data <- data.frame(Betas=betas.plot, Age=age)								# combine DNAm (y-axis) and age (x-axis) into df
+	probe <- rownames(res)[i]                                                   # the i_th probe in res
+	betas.plot <- (betas[probe,])*100                                           # corresponding DNAm values for probe. Multiplied by 100 for %
+	age <- pheno[,age.column]                                                   # age column of sample sheet
+	data <- data.frame(Betas=betas.plot, Age=age)                               # combine DNAm (y-axis) and age (x-axis) into df
 
 	# creating the title using probe ID, gene name (if applicable) and chr
-	if(res[i,'Gene']!=''){														# if gene is present...
-		ttl <- paste0(probe, ' - ', res[i,'Gene'], ' - CHR ',res[i,'CHR'])			# combine probe ID, gene name and chromosome
-	}else{																		# if there's no gene name...
-		ttl <- paste0(probe, ' - CHR ', res[i,'CHR'])								# just probe ID and chr
+	if(res[i,'Gene']!=''){                                                      # if gene is present...
+		ttl <- paste0(probe, ' - ', res[i,'Gene'], ' - CHR ',res[i,'CHR'])          # combine probe ID, gene name and chromosome
+	}else{                                                                      # if there's no gene name...
+		ttl <- paste0(probe, ' - CHR ', res[i,'CHR'])                               # just probe ID and chr
 	}
-	ttl <- paste0(ttl, "\np = ", signif(res[i,'P.Age'], digits=3))				# append the p-value for that probe to the title as a new line
+	ttl <- paste0(ttl, "\np = ", signif(res[i,'P.Age'], digits=3))              # append the p-value for that probe to the title as a new line
 
 	# plot
 	ggplot(data, aes(x=Age, y=Betas)) + 
@@ -85,10 +85,10 @@ ageByGroup_scatter <- function(res, pheno, betas, i, age.column, p.column, group
 	}
 	
 	# creating the title using probe ID, gene name (if applicable) and chr
-	if(res[i,'Gene']!=''){														# if gene is present...
-		ttl <- paste0(probe, ' - ', res[i,'Gene'], ' - CHR ',res[i,'CHR'])			# combine probe ID, gene name and chromosome
-	}else{																		# if there's no gene name...
-		ttl <- paste0(probe, ' - CHR ', res[i,'CHR'])								# just probe ID and chr
+	if(res[i,'Gene']!=''){                                                      # if gene is present...
+		ttl <- paste0(probe, ' - ', res[i,'Gene'], ' - CHR ',res[i,'CHR'])          # combine probe ID, gene name and chromosome
+	}else{                                                                      # if there's no gene name...
+		ttl <- paste0(probe, ' - CHR ', res[i,'CHR'])                               # just probe ID and chr
 	}
 	ttl <- paste0(ttl,"\np = ",p.value)
 

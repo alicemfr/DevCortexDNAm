@@ -66,7 +66,7 @@ show(p)
 ESscatter_AgeCellSpecific <- function(df, age.group, Xlim=NULL, Ylim=NULL){
 
 p <- ggplot(df %>% arrange(Significance), aes(x=Neuronal, y=Non.neuronal, colour=Significance))+
-		{if(!is.null(Xlim)){ xlim(Xlim) }}+ #fetal: -0.08,0.06, adult: -0.005,0.005
+		{if(!is.null(Xlim)){ xlim(Xlim) }}+
 		{if(!is.null(Ylim)){ ylim(Ylim) }}+
 		xlab("Neuronal\nAge Effect Size")+
 		ylab("Non-neuronal\nAge Effect Size")+

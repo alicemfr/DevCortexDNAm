@@ -33,12 +33,12 @@ res.nonsig <- res[-which(rownames(res) %in% rownames(res.sig)),] # non-significa
 #2. Calculate statistics for chr distribution ===================================================================================
 
 ChrCounts <- function(mat, HypoHyper=FALSE){
-	chr_feature <- mat$CHR									     # chr in results
-	chr.feature <- 1:23										     # names of possible chrs
+	chr_feature <- mat$CHR                                       # chr in results
+	chr.feature <- 1:23                                          # names of possible chrs
 	chr_feature_counts <- matrix(data=NA, ncol=length(chr.feature), nrow=1)
 	colnames(chr_feature_counts) <- chr.feature
 	for(i in 1:length(chr.feature)){
-		ln <- length(which(chr_feature==chr.feature[i]))	     # number for each possible chr in results
+		ln <- length(which(chr_feature==chr.feature[i]))         # number for each possible chr in results
 		chr_feature_counts[1,i] <- ln
 	}
 	
@@ -82,9 +82,9 @@ enr_test <- function(features, resCol, sig.counts, nonsig.counts, background.sig
 	colnames(enr) <- c('P','Beta')
 		for(i in 1:length(features)){
 			f <- features[i] # chr of interest
-			sig.f <- sig.counts[[resCol]][which(colnames(sig.counts[[resCol]])==f)]	           # significant counts of this chr
+			sig.f <- sig.counts[[resCol]][which(colnames(sig.counts[[resCol]])==f)]            # significant counts of this chr
 			nonsig.f <- nonsig.counts[[resCol]][which(colnames(nonsig.counts[[resCol]])==f)]   # non-significant counts of this chr
-			sig.o <- background.sig[which(colnames(background.sig)==f)]	                       # significant counts of other chrs
+			sig.o <- background.sig[which(colnames(background.sig)==f)]                        # significant counts of other chrs
 			nonsig.o <- background.nonsig[which(colnames(background.nonsig)==f)]               # non-significant counts of other chrs
 			
 			m <- matrix( c( c(sig.f,sig.o),c(nonsig.f,nonsig.o) ), nrow=2, byrow=T)

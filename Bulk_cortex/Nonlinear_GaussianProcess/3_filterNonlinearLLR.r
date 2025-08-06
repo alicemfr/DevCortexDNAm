@@ -40,19 +40,19 @@ meanMeth <- apply(betas.match, 1, mean, na.rm=T)
 # Combine
 df <- data.frame(Timescale=gpstats.nonlinear$mat52_ell, logTimescale=log10(gpstats.nonlinear$mat52_ell), MatvsConst=matvsconst, MatvsLinear=matvslin, logSNR=snr, meanMeth=meanMeth, logMeanMeth=log10(meanMeth))
 
-nrow(df); range(df$Timescale) 								# 175886 probes. Timescale range: 3.118077 - 390.813925
+nrow(df); range(df$Timescale)                               # 175886 probes. Timescale range: 3.118077 - 390.813925
 
 
 #5. Filter probes on LLR ========================================================================================================
 # remove any probes with LLR < 2 for either MatvsConst or MatvsLinear
-df2 <- df[-which(df$MatvsConst<2 | df$MatvsLinear<2),] 		# 73,531 remaining. Timescale range: 3.118077 - 282.707953
+df2 <- df[-which(df$MatvsConst<2 | df$MatvsLinear<2),]      # 73,531 remaining. Timescale range: 3.118077 - 282.707953
 
 # An outlier probe with Timescale of 282 wasn't removed because its LLR is 2.744128 for both MatvsConst and MatvsLinear.
 # Removing this probe manually as biologically unrealistic timescale.
-df2 <- df2[-which(df2$Timescale>282),]						# 73,530 remaining. Timescale range: 3.118077 - 93.283957
+df2 <- df2[-which(df2$Timescale>282),]                      # 73,530 remaining. Timescale range: 3.118077 - 93.283957
 
 # Remove 495 probes with timescale < 10 as outlier-probe
-df3 <- df2[-which(df2$Timescale<10),]						# 73,035 remaining. Timescale range: 10.00414 - 93.28396
+df3 <- df2[-which(df2$Timescale<10),]                       # 73,035 remaining. Timescale range: 10.00414 - 93.28396
 
 saveRDS(df3, file=paste0(postprocessPath,"nonlinearMetrics.rds"))
 
