@@ -47,7 +47,7 @@ tmp$NewCellType <- as.numeric(tmp$NewCellType)
 tmp$Sex <- as.numeric(tmp$Sex)
 
 pdf(paste0(plotPath,"FANS_PCAcorHeatmap_4PCs_AgeCellSex_narrow.pdf"), width=3, height=4)
-corPs <- pcaCorPlot(samplesheet=tmp, columns=c('Phenotype','NewCellType','Sex'), nPCs=4, pca.res=pca.all, colLabels=c('Age','Cell-type','Sex'), returnP=T)
+corPs <- pcaCorPlot(pheno=tmp, columns=c('Phenotype','NewCellType','Sex'), nPCs=4, pca.res=pca.all, colLabels=c('Age','Cell-type','Sex'), returnP=T)
 dev.off()
 
 

@@ -177,18 +177,18 @@ PCAproject <- function(pca.res, testdata){
 
 
 library(corrplot)
-pcaCorPlot <- function(samplesheet, columns, pca.res, nPCs=10, colLabels=NULL, returnP=FALSE){  # credit Dr Josh Harvey
-	# columns = character string of column names of samplesheet containing the variables of interest
-	# pca.res = pca results from prcomp() run on same samples as in samplesheet.
+pcaCorPlot <- function(pheno, columns, pca.res, nPCs=10, colLabels=NULL, returnP=FALSE){  # credit Dr Josh Harvey
+	# columns = character string of column names of pheno containing the variables of interest
+	# pca.res = pca results from prcomp() run on same samples as in pheno.
 	# nPCs = max number of principle components to plot out
 	# colLabels = optional: specify character string for renaming headers of heatmap if different to `columns`
 	# returnP = logical whether to return p-values of correlation statistics
 	PCAres <- pca.res
 	PCs <- PCAres$x[,1:nPCs]
-	testCor <- cor.mtest(data.frame(samplesheet[,columns],PCs),conf.level=0.95)
+	testCor <- cor.mtest(data.frame(pheno[,columns],PCs),conf.level=0.95)
 	testCorp <- testCor$p 
 	testCorp <- testCorp[1:length(columns),(length(columns)+1):ncol(testCorp)]
-	corPCA <- cor(PCs,samplesheet[,columns])
+	corPCA <- cor(PCs,pheno[,columns])
 	if(!is.null(colLabels)){
 		colnames(corPCA) <- colLabels
 	}
@@ -204,9 +204,9 @@ pcaCorPlot <- function(samplesheet, columns, pca.res, nPCs=10, colLabels=NULL, r
 }
 
 
-pcaCorPlot.withCov <- function(samplesheet, columns, pca.res, nPCs=10, colLabels=NULL, covariate=NULL, returnP=FALSE){
-	# columns = character string of column names of samplesheet containing the variables of interest
-	# pca.res = pca results from prcomp() run on same samples as in samplesheet.
+pcaCorPlot.withCov <- function(pheno, columns, pca.res, nPCs=10, colLabels=NULL, covariate=NULL, returnP=FALSE){
+	# columns = character string of column names of pheno containing the variables of interest
+	# pca.res = pca results from prcomp() run on same samples as in pheno.
 	# nPCs = max number of principle components to plot out
 	# colLabels = optional: specify character string for renaming headers of heatmap if different to `columns`
 	# covariate = covariate to control for. If there is a clash and the same variable is present in `columns` and `covariate`,
@@ -228,15 +228,15 @@ pcaCorPlot.withCov <- function(samplesheet, columns, pca.res, nPCs=10, colLabels
 		for(j in 1:length(columns)){
 			
 			if(is.null(covariate)){
-				mod <- lm(PCs[,i]~samplesheet[,columns[j]])
+				mod <- lm(PCs[,i]~pheno[,columns[j]])
 				p <- coef(summary(mod))[2,'Pr(>|t|)']
 			}else{
 				if(covariate==columns[j]){
 					p <- NA
 				}else{
 					Y <- PCs[,i]
-					X <- samplesheet[,columns[j]]
-					C <- samplesheet[,covariate]
+					X <- pheno[,columns[j]]
+					C <- pheno[,covariate]
 					mod <- lm(reformulate(paste("X", "C", sep='+'), "Y"))
 					p <- coef(summary(mod))['X','Pr(>|t|)']
 				}
@@ -244,7 +244,7 @@ pcaCorPlot.withCov <- function(samplesheet, columns, pca.res, nPCs=10, colLabels
 			pvals[i,j] <- p
 		}
 	}
-	corPCA <- cor(PCs,samplesheet[,columns])
+	corPCA <- cor(PCs,pheno[,columns])
 	if(!is.null(colLabels)){
 	colnames(corPCA) <- colLabels
 	}
