@@ -25,7 +25,7 @@ screePlot <- function(pca.res, nPCs, pcA, pcB, toPlot=TRUE, return.pcVars=FALSE)
 }
 
 
-pca.Gene <- function(QCmetrics.sub, betas, varProbes=FALSE, nVarprobes=NULL, probeList=NULL, ...){
+pca.Gene <- function(pheno, betas, varProbes=FALSE, nVarprobes=NULL, probeList=NULL, ...){
   # epicManifest must be loaded ahead of time
   # function does not check for NAs; na.omit() must be run ahead of time on the betas
   # rownames(pheno) must match colnames(betas)
@@ -35,9 +35,9 @@ pca.Gene <- function(QCmetrics.sub, betas, varProbes=FALSE, nVarprobes=NULL, pro
   }
   
   betas.pca <- betas
-  betas.sub <- betas.pca[,which(colnames(betas.pca) %in% rownames(QCmetrics.sub))]
-  betas.sub <- betas.sub[,match(rownames(QCmetrics.sub), colnames(betas.sub))]
-  identical(rownames(QCmetrics.sub), colnames(betas.sub))
+  betas.sub <- betas.pca[,which(colnames(betas.pca) %in% rownames(pheno))]
+  betas.sub <- betas.sub[,match(rownames(pheno), colnames(betas.sub))]
+  identical(rownames(pheno), colnames(betas.sub))
   
   if(!is.null(probeList)){
     betas.sub <- betas.sub[which(rownames(betas.sub) %in% probeList),]
