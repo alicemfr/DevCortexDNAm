@@ -1,6 +1,6 @@
 
 
-## 5. WGCNA - run logistic regression pathway analysis on WGCNA nonlinear modules ##
+## 5. WGCNA - run pathway analysis on WGCNA nonlinear modules ##
 
 library(WGCNA)
 library(data.table)
