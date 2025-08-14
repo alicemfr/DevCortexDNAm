@@ -18,8 +18,6 @@ print(paste0("File will be saved to ...", AnalysisPath, output.file))
 columns <- c('Estimate.','SE.','P.')
 output.colnames <- c("Anova.P",paste0(columns, mod))
 if(mod=="AgeCell"){ output.colnames <- c('Anova.P', paste0(columns,'Age:CellType'), paste0(columns,'Age'), paste0(columns,'CellType')) }
-if(mod=="AgeSex"){ output.colnames <- c('Anova.P', paste0(columns,'Age:Sex'), paste0(columns,'Age'), paste0(columns,'CellType')) }
-if(mod=="SexCell"){ output.colnames <- c('Anova.P', paste0(columns,'Sex:CellType'), paste0(columns,'Sex'), paste0(columns,'CellType')) }
 if(mod=='AgeCellSpecific'){ output.colnames <- c("ES.Age","P.Age","ES.Sex","P.Sex") }
 
 print("Output colnames will be ...")
