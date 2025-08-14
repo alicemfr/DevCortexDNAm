@@ -1,0 +1,8 @@
+## Cell-type-specific DNA methylation dynamics in the prenatal and postnatal human cortex
+
+This repository contains scripts for the following paper.
+
+Alice Franklin, Jonathan P. Davies, Nicholas E Clifton, Georgina E T Blake, Rosemary Bamford, Emma M Walker, Barry Chioza, Martyn Frith, APEX Consortium, Youth-GEMs Consortium, Joe Burrage, Nick Owens, Shyam Prabhakar, Emma Dempster, Eilis Hannon, Jonathan Mill
+
+
+The human cortex undergoes extensive epigenetic remodelling during development, although the precise temporal and cell-type-specific dynamics of DNA methylation remain incompletely understood. In this study, we profiled genome-wide DNA methylation across human cortex tissue from donors aged 6 post-conception weeks to 108 years of age. We observed widespread, developmentally regulated changes in DNA methylation, with pronounced shifts occurring during early- and mid-gestation that were distinct from age-associated modifications in the postnatal cortex. Using fluorescence-activated nuclei sorting, we optimized a protocol for the isolation of SATB2-positive neuronal nuclei, enabling the identification of cell-type-specific DNA methylation trajectories in the developing cortex. Developmentally dynamic DNA methylation sites were significantly enriched near genes implicated in autism and schizophrenia, supporting a role for epigenetic dysregulation in neurodevelopmental conditions. Our findings underscore the prenatal period as a critical window of epigenomic plasticity in the brain with important implications for understanding the genetic basis of neurodevelopmental phenotypes.
